@@ -1,11 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Book Club</title>
-</head>
-<body>
+{% extends "base.html" %}
+{% block content %}
+
+   
+
    {% for book in books %}
         {{ book.book_title }}<br>
         {{ book.book_author }}<br>
@@ -15,5 +12,5 @@
         {{ book.comment }}<br>
         {{ book.reader_likes }}<br>
     {% endfor %}  
-</body>
-</html>
+
+{% endblock %}
