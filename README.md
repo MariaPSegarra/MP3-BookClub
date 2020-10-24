@@ -1,4 +1,4 @@
-# 3rd Milestone project - Data Centric - Book Club
+# 3rd Milestone project - Data Centric - Book Club 4Readers
 
 For this 3rd milestone project I'm creating an app with Flask based on a Book Club concept.
 The admin of this app posts several weekly reading options than can of course be edited and deleted.
@@ -9,7 +9,7 @@ They'll also be able to contact the admin and make suggestions for future weekly
 
 ## Motivation for the project
 
-The idea is based on one of the suggestions the course made. It was originally a book store but I thought it'd be a more interesting app if I implemented som interaction with the user. So the idea of the Book Club was born.
+The idea is based on one of the suggestions the course made. It was originally a book store but I thought it'd be a more interesting app if I implemented some interaction with the user. So the idea of the Book Club was born.
 
 I 
 
