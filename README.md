@@ -1,43 +1,27 @@
-<img src="https://codeinstitute.s3.amazonaws.com/fullstack/ci_logo_small.png" style="margin: 0;">
+# 3rd Milestone project - Data Centric - Book Club
 
-Welcome MariaPSegarra,
+For this 3rd milestone project I'm creating an app with Flask based on a Book Club concept.
+The admin of this app posts several weekly reading options than can of course be edited and deleted.
+The admin will take suggestions for new books from Users.
+Users will be able to login to their own profile page. From there they will be able to read all book suggestions featured in the app, 
+They'll be able to like the content and post their own comments. They'll be able to see other users likes and comments.
+They'll also be able to contact the admin and make suggestions for future weekly reads.
 
-This is the Code Institute student template for Gitpod. We have preinstalled all of the tools you need to get started. You can safely delete this README.md file, or change it for your own project.
+## Motivation for the project
 
-## Gitpod Reminders
+The idea is based on one of the suggestions the course made. It was originally a book store but I thought it'd be a more interesting app if I implemented som interaction with the user. So the idea of the Book Club was born.
 
-To run a frontend (HTML, CSS, Javascript only) application in Gitpod, in the terminal, type:
+I 
 
-`python3 -m http.server`
+I encountered many problems following the old course videos for this Data Centric Module. I wasted a lot of time trying to work out the videos based on Cloud9, while I've been using Gitpod (as per the course instructions).
+I finally got access to the new videos and I was able to follow the isntruction to connect to MongoDB and Heroku without any problems. 
 
-A blue button should appear to click: *Make Public*,
+## Techonologies 
+- HTML5
+- CSS
+- Javascript
+- Jquery
+- Python
 
-Another blue button should appear to click: *Open Browser*.
+The Flask app is connected to the MONGODB noSQL and deployed on Heroku.
 
-To run a backend Python file, type `python3 app.py`, if your Python file is named `app.py` of course.
-
-A blue button should appear to click: *Make Public*,
-
-Another blue button should appear to click: *Open Browser*.
-
-In Gitpod you have superuser security privileges by default. Therefore you do not need to use the `sudo` (superuser do) command in the bash terminal in any of the backend lessons.
-
-## Updates Since The Instructional Video
-
-We continually tweak and adjust this template to help give you the best experience. Here are the updates since the original video was made:
-
-**October 08 2020:** Additional large Gitpod files (`core.mongo*` and `core.python*`) are now hidden in the Explorer, and have been added to the `.gitignore` by default.
-
-**September 22 2020:** Gitpod occasionally creates large `core.Microsoft` files. These are now hidden in the Explorer. A `.gitignore` file has been created to make sure these files will not be committed, along with other common files.
-
-**April 16 2020:** The template now automatically installs MySQL instead of relying on the Gitpod MySQL image. The message about a Python linter not being installed has been dealt with, and the set-up files are now hidden in the Gitpod file explorer.
-
-**April 13 2020:** Added the _Prettier_ code beautifier extension instead of the code formatter built-in to Gitpod.
-
-**February 2020:** The initialisation files now _do not_ auto-delete. They will remain in your project. You can safely ignore them. They just make sure that your workspace is configured correctly each time you open it. It will also prevent the Gitpod configuration popup from appearing.
-
-**December 2019:** Added Eventyret's Bootstrap 4 extension. Type `!bscdn` in a HTML file to add the Bootstrap boilerplate. Check out the <a href="https://github.com/Eventyret/vscode-bcdn" target="_blank">README.md file at the official repo</a> for more options.
-
---------
-
-Happy coding!
