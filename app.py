@@ -36,7 +36,7 @@ def register():
         if existing_user:
             flash("Username already exists")
             return redirect(url_for("register"))
- 
+
         register = {
             "username": request.form.get("username").lower(),
             "password": generate_password_hash(request.form.get("password"))
@@ -85,11 +85,7 @@ def profile(username):
     # grab the session user's username from db
     username = mongo.db.users.find_one(
         {"username": session["user"]})["username"]
-
-    if session["user"]:
-        return render_template("profile.html", username=username)
-
-    return redirect(url_for("login"))
+    return render_template("profile.html", username=username)
 
 
 @app.route("/logout")
@@ -98,6 +94,12 @@ def logout():
     flash("You have been logged out")
     session.pop("user")
     return redirect(url_for("login"))
+
+
+@app.route("/contact", methods=["GET", "POST"])
+def contact():
+    flash("Your message has been sent")
+    return render_template("contact.html")
 
 
 if __name__ == "__main__":
