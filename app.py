@@ -10,6 +10,12 @@ if os.path.exists("env.py"):
 
 
 app = Flask(__name__)
+comments = []
+
+
+def add_comment(username, comment):
+    # add new comment
+    comments.append({"from": username, "comment": comment})
 
 
 app.config["MONGO_DBNAME"] = os.environ.get("MONGO_DBNAME")
@@ -20,8 +26,8 @@ mongo = PyMongo(app)
 
 
 @app.route("/")
-@app.route("/see_books")
-def see_books():
+@app.route("/books", methods=["GET", "POST"])
+def books():
     books = mongo.db.books.find()
     return render_template("books.html", books=books)
 
@@ -98,6 +104,8 @@ def logout():
 
 @app.route("/contact", methods=["GET", "POST"])
 def contact():
+    # displays flash message after the message has been sent.
+    # it should return an empty template
     flash("Your message has been sent")
     return render_template("contact.html")
 

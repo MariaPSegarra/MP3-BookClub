@@ -1,14 +1,54 @@
 {% extends "base.html" %}
 {% block content %} 
 
-   {% for book in books %}
-        {{ book.book_title }}<br>
-        {{ book.book_author }}<br>
-        {{ book.genre_name }}<br>
-        {{ book.book_description }}<br>
-        {{ book.add_to_favourites }}<br>
-        {{ book.comment }}<br>
-        {{ book.reader_likes }}<br>
-    {% endfor %}  
+<section class="container">
+<h3 class="center-align">Books 4readers</h3>
+
+{% for book in books %}
+  <div class="col s12 m7">
+    <div class="card horizontal">
+            <div class="card-image ">
+                <img src="https://i.gr-assets.com/images/S/compressed.photo.goodreads.com/books/1353277730l/11588.jpg">
+            </div>
+        <div class="card-stacked">
+            <div class="card-content">
+                <span class="card-title cyan-text text-darken-3"><b>{{ book.book_title }} by {{ book.book_author }}</b></span>
+                <br>
+                <p><b>Genre:</b> <em>{{ book.genre_name }}</em></p>
+                <br>
+                <p>{{ book.book_description }}</p>
+            </div>
+            <div class="card-action">
+                <a href="#">Like<i class="fas fa-star prefix cyan-text text-darken-3"></i></a>
+            </div>
+        </div>
+  </div>
+{% endfor %} 
+</section>
+
+{% if session.user %}
+<section class="container">
+    <form class="col s12 m7" method="POST">
+        <div class="card-panel">
+            <div class="row">
+                <div class="input-field col s12">
+                    <i class="fas fa-pen prefix cyan-text text-darken-3"></i>
+                    <textarea id="comment" name="comment" class="materialize-textarea validate"></textarea>
+                    <label for="comment">Comment</label>
+                </div>
+            </div>
+            <div class="row">
+                <button type="submit" name="send-comment" id="send-comment" class="col s12 btn-large cyan darken-3 text-shadow">
+                    Post comment <i class="fas fa-sign-in-alt"></i>
+                </button>
+            </div>
+        </div>
+    </form>
+{% endif %}
+
+    {% for comment in book_comments %}
+        <p>{{ comment.from }}: {{ comment.comment }}</p>
+    {% endfor %}
+</section>
 
 {% endblock %}
