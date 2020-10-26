@@ -110,6 +110,25 @@ def contact():
     return render_template("contact.html")
 
 
+@app.route("/add_book")
+def add_book():
+    if request.method == "POST":
+        book = {
+            "book_title": request.form.get("book_title"),
+            "book_author": request.form.get("book_author"),
+            "genre_name": request.form.get("genre_name"),
+            "book_description": request.form.get("book_description"),
+            "book_image": request.form.get("book_image"),
+            "created_by": session["user"]
+        }
+        mongo.db.books.insert_one(book)
+        flash("Your Book has been Added")
+        return redirect(url_for("books"))
+
+    genres = mongo.db.genres.find().sort("genre_name", 1)
+    return render_template("add_book.html", genres=genres)
+
+
 if __name__ == "__main__":
     app.run(host=os.environ.get("IP"),
             port=int(os.environ.get("PORT")),

@@ -26,8 +26,8 @@
                         <li><a href="{{ url_for('contact') }}">Contact</a></li>
                         {% if session.user %}
                         <li><a href="{{ url_for('profile', username=session['user']) }}">Profile</a></li>
-                        <li><a href="#">Suggest a Book</a></li>
-                        <li><a href="#">Books by Genres</a></li>
+                        <li><a href="{{ url_for('add_book') }}">Add New Book</a></li>
+                        <li><a href="#">Find Books</a></li>
                         <li><a href="{{ url_for('logout') }}">Log Out</a></li>
                     {% else %}
                         <li><a href="{{ url_for('login') }}">Log In</a></li>
@@ -41,11 +41,11 @@
             <ul class="sidenav" id="mobile-demo">
                 <li><h4 class="center-align blue-grey-text text-lighten-2">4readers</h4></li>
                         <li><a href="{{ url_for('books') }}">Home</a></li>
-                        <li><a href="#">Books by Genre</a></li>
                         <li><a href="{{ url_for('contact') }}">Contact</a></li>
                         {% if session.user %}
                         <li><a href="{{ url_for('profile', username=session['user']) }}">Profile</a></li>
-                        <li><a href="#">Suggest a Book</a></li>
+                        <li><a href="{{ url_for('add_book') }}">Add New Book</a></li>
+                        <li><a href="#">Find Books</a></li>
                         <li><a href="{{ url_for('logout') }}">Log Out</a></li>
                     {% else %}
                         <li><a href="{{ url_for('login') }}">Log In</a></li>
@@ -85,7 +85,6 @@
         integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <script src="static/script.js"></script>
-
     {% block scripts %}
     {% endblock %}
 </body>
