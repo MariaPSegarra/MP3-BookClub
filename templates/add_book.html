@@ -10,8 +10,8 @@
             <div class="row">
                 <div class="input-field col s12">
                     <i class="fas fa-book prefix cyan-text text-darken-3"></i>
-                    <input id="book_title" name="book_title" 
-                        type="text" class="validate" required>
+                    <textarea id="book_title" name="book_title" 
+                        type="text"  class="materialize-textarea validate" required></textarea>
                     <label for="book_title">Title</label>
                 </div>
             </div>
@@ -26,13 +26,13 @@
             <div class="row">
                 <div class="input-field col s12">
                     <i class="fas fa-user-secret prefix cyan-text text-darken-3"></i>
-                    <select id="genre_name" name="genre_name" class="materialize-textarea validate" required>
+                    <select id="genre_name" name="genre_name" class="validate" required>
                         <option value="" disabled selected>Choose Genre</option>
                         {% for genre in genres %}
                             <option value="{{ genre.genre_name }}">{{ genre.genre_name }}</option>
                         {% endfor %}
                     </select>
-                    <label>Genre</label>
+                    <label for="category_genre">Genre</label>
                 </div>
             </div>
 	        <div class="row">
