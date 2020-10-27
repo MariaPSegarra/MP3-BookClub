@@ -21,38 +21,35 @@
             </div>
             <div class="card-action">
                 <p><b>Book suggested by:</b> <em>{{ book.added_by }}</em></p>
+            {% if session.user %}     
                  <p><a href="" class="btn-small teal">Done</a>
                 <a href="" class="btn-small orange darken-2">Edit</a></p>
+            {% endif %}
+            </div>
+
+        </div>
+    </div>
+    <div class="card-panel col s12 m8 offset-m2">
+        <div class="row ">
+            <div class="input-field col s12">
+                <i class="fas fa-pen prefix cyan-text text-darken-3"></i>
+                <textarea id="comment" name="comment" class="materialize-textarea validate"></textarea>
+                <label for="comment">Comment</label>
             </div>
         </div>
+        <div class="row">
+            <button type="submit" name="send-comment" id="send-comment" class="col s12 btn-large cyan darken-3 text-shadow">
+                Post comment <i class="fas fa-sign-in-alt"></i>
+            </button>
+        </div>
+     </div>
   </div>
-{% if session.user %}
-
-        <div class="card-panel">
-            <div class="row">
-                <div class="input-field col s12">
-                    <i class="fas fa-pen prefix cyan-text text-darken-3"></i>
-                    <textarea id="comment" name="comment" class="materialize-textarea validate"></textarea>
-                    <label for="comment">Comment</label>
-                </div>
-            </div>
-            <div class="row">
-                <button type="submit" name="send-comment" id="send-comment" class="col s12 btn-large cyan darken-3 text-shadow">
-                    Post comment <i class="fas fa-sign-in-alt"></i>
-                </button>
-            </div>
-        </div>
-    </form>
-
     {% for comment in book_comments %}
         <p>{{ comment.from }}: {{ comment.comment }}</p>
     {% endfor %}
 
-{% endif %}
-
 <hr class="cyan-text text-darken-3">
 
 {% endfor %} 
-
 
 {% endblock %}
