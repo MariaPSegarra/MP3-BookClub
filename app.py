@@ -32,6 +32,18 @@ def books():
     return render_template("books.html", books=books)
 
 
+def user(username):
+    # display new comment
+    if request.method == "POST":
+        username = session["user"]
+        comment = request.form["comment"]
+        add_comment(username, comment)
+        return redirect(url_for("book", username=session["user"]))
+
+    return render_template("book.html", username=username,
+                           book_comments=comments)
+
+
 @app.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == "POST":
@@ -110,7 +122,7 @@ def contact():
     return render_template("contact.html")
 
 
-@app.route("/add_book")
+@app.route("/add_book", methods=["GET", "POST"])
 def add_book():
     if request.method == "POST":
         book = {
@@ -119,7 +131,7 @@ def add_book():
             "genre_name": request.form.get("genre_name"),
             "book_description": request.form.get("book_description"),
             "book_image": request.form.get("book_image"),
-            "created_by": session["user"]
+            "created_by": session["username"]
         }
         mongo.db.books.insert_one(book)
         flash("Your Book has been Added")

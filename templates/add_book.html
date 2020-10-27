@@ -25,7 +25,7 @@
                 <div class="input-field col s12">
                     <i class="fas fa-user-secret prefix cyan-text text-darken-3"></i>
                     <select id="genre_name" name="genre_name" class="materialize-textarea validate" required>
-                        <option value="" disabled selected>Select Genre</option>
+                        <option value="" disabled selected>Choose Genre</option>
                         {% for genre in genres %}
                             <option value="{{ genre.genre_name }}">{{ genre.genre_name }}</option>
                         {% endfor %}

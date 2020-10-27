@@ -19,11 +19,10 @@
                 <p>{{ book.book_description }}</p>
             </div>
             <div class="card-action">
-                <a href="#">Like<i class="fas fa-star prefix cyan-text text-darken-3"></i></a>
+                <p><b>Book suggested by:</b> <em> {{ session["user"] }}</em></p>
             </div>
         </div>
   </div>
-{% endfor %} 
 </section>
 
 {% if session.user %}
@@ -44,11 +43,14 @@
             </div>
         </div>
     </form>
-{% endif %}
 
     {% for comment in book_comments %}
         <p>{{ comment.from }}: {{ comment.comment }}</p>
     {% endfor %}
+{% endif %}
+<hr class="cyan-text text-darken-3">
+{% endfor %} 
+
 </section>
 
 {% endblock %}
