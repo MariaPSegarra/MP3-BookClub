@@ -80,19 +80,20 @@ def login():
             # ensure hashed password matches user input
             if check_password_hash(
                 existing_user["password"], request.form.get("password")):
-                    session["user"] = request.form.get("username").lower(),
+                    session["user"] = request.form.get(
+                        "username").lower()
                     flash("Welcome, {}".format(
                         request.form.get("username")))
                     return redirect(url_for(
                         "profile", username=session["user"]))
             else:
                 # invalid password match
-                flash("Incorrect Username and/or Password")
+                flash("Wrong Password. Please try again.")
                 return redirect(url_for("login"))
 
         else:
             # username doesn't exist
-            flash("Incorrect Username and/or Password")
+            flash("Wrong Username. Please try again.")
             return redirect(url_for("login"))
 
     return render_template("login.html")
@@ -131,11 +132,12 @@ def add_book():
             "genre_name": request.form.get("genre_name"),
             "book_description": request.form.get("book_description"),
             "book_image": request.form.get("book_image"),
-            "created_by": session["username"]
+            "added_by": session["user"]
         }
+
         mongo.db.books.insert_one(book)
         flash("Your Book has been Added")
-        return redirect(url_for("books"))
+        return redirect(url_for("books", "profile"))
 
     genres = mongo.db.genres.find().sort("genre_name", 1)
     return render_template("add_book.html", genres=genres)

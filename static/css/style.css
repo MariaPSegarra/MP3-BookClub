@@ -4,12 +4,17 @@ main {
     padding-bottom: 20px;
 }
 
-.brand-logo {
-    padding-left: 20px;
+nav .brand-logo {
+    padding-left: 30px;
 }
 
 .text-shadow {
     text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.5);
+}
+
+.card-horizontal .card-image {
+    max-width: 350px;
+    height: auto;
 }
 
 .page-footer {
@@ -20,6 +25,10 @@ main {
     line-height: 2;
     padding: 10px;
     max-width: 500px;
+}
+
+.btn-small {
+    margin: 5px;
 }
 
 hr {

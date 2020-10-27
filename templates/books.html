@@ -1,8 +1,9 @@
 {% extends "base.html" %}
 {% block content %} 
 
-<section class="container">
-<h3 class="center-align cyan-text text-darken-3">Books 4readers</h3>
+<div class="row">
+    <h3 class="center-align cyan-text text-darken-3">BOOKS 4readers</h3>
+</div>
 
 {% for book in books %}
   <div class="col s12 m7">
@@ -19,15 +20,14 @@
                 <p>{{ book.book_description }}</p>
             </div>
             <div class="card-action">
-                <p><b>Book suggested by:</b> <em> {{ session["user"] }}</em></p>
+                <p><b>Book suggested by:</b> <em>{{ book.added_by }}</em></p>
+                 <p><a href="" class="btn-small teal">Done</a>
+                <a href="" class="btn-small orange darken-2">Edit</a></p>
             </div>
         </div>
   </div>
-</section>
-
 {% if session.user %}
-<section class="container">
-    <form class="col s12 m7" method="POST">
+
         <div class="card-panel">
             <div class="row">
                 <div class="input-field col s12">
@@ -47,10 +47,12 @@
     {% for comment in book_comments %}
         <p>{{ comment.from }}: {{ comment.comment }}</p>
     {% endfor %}
+
 {% endif %}
+
 <hr class="cyan-text text-darken-3">
+
 {% endfor %} 
 
-</section>
 
 {% endblock %}

@@ -1,7 +1,9 @@
 {% extends "base.html" %}
 {% block content %}
 
-    <h3 class="center-align cyan-text text-darken-3">Add New Book</h3>
+<div class="row">
+    <h3 class="center-align cyan-text text-darken-3">ADD NEW BOOK</h3>
+</div>
 
      <div class="row card-panel">
         <form class="col s12" method="POST" action="{{ url_for('add_book') }}">
