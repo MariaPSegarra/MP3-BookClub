@@ -11,47 +11,18 @@
         </div>
     </div>
 
-<div class="row">
-    <h3 class="center-align cyan-text text-darken-3">YOUR BOOKS</h3>
-</div>
-
-{% for book in books %}
-  <div class="col s12 m7">
-    <div class="card horizontal">
-            <div class="card-image ">
-                <img src="{{ book.book_image}}">
-            </div>
-        <div class="card-stacked">
-            <div class="card-content">
-                <span class="card-title cyan-text text-darken-3"><b>{{ book.book_title }} by {{ book.book_author }}</b></span>
-                <br>
-                <p><b>Genre:</b> <em>{{ book.genre_name }}</em></p>
-                <br>
-                <p>{{ book.book_description }}</p>
-            </div>
-            <div class="card-action">
-                <p><b>Book suggested by:</b> <em>{{ book.added_by }}</em></p>
-            {% if session.user|lower == book.added_by|lower %}     
-                 <p><a href="{{ url_for('delete_book', book_id=book._id) }}" class="btn-small orange darken-2">Delete</a>
-                <a href="{{ url_for('edit_book', book_id=book._id) }}" class="btn-small teal">Edit</a></p>
-            {% endif %}
-            </div>
-
-        </div>
-    </div>
-    
-<hr class="cyan-text text-darken-3">
-
-{% endfor %} 
-
-       <div class="row">
+      <div class="row">
         <div class="col s12">
             <p class="center-align">
-                <a href="{{ url_for('login') }}" class="cyan-text text-darken-3">Log Out</a>
+                <a href="{{ url_for('get_books') }}" class="btn-small teal text-shadow">Search for books <i class="fas fa-plus-square"></i></a> 
+                 <a href="{{ url_for('add_book') }}" class="btn-small teal text-shadow">Add a book <i class="fas fa-plus-square"></i></a> 
+            </p>
+            <p class="center-align">
+                 <a href="{{ url_for('login') }}" class="btn-small cyan darken-3 text-shadow">Log Out<i class="fas fa-sign-out-alt"></i> </a> 
             </p>
         </div>
     </div>
+	
 
-
-
+     
 {% endblock %}

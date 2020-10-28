@@ -26,7 +26,7 @@ mongo = PyMongo(app)
 
 
 @app.route("/")
-@app.route("/get_books")
+@app.route("/get_books", methods=["GET", "POST"])
 def get_books():
     books = mongo.db.books.find()
     return render_template("books.html", books=books)
@@ -38,7 +38,7 @@ def get_books():
 def search():
     query = request.form.get("query")
     books = list(mongo.db.books.find({"$text": {"$search": query}}))
-    #Performs a search in any text index for this collection using the query variable
+    #Performs a search in any text index using the query variable
     return render_template("books.html", books=books)
 
 
