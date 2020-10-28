@@ -26,23 +26,20 @@ mongo = PyMongo(app)
 
 
 @app.route("/")
-@app.route("/get_books", methods=["GET", "POST"])
+@app.route("/get_books")
 def get_books():
     books = mongo.db.books.find()
     return render_template("books.html", books=books)
     #1st books gets passed to genre.html 
     #2nd books is the variable defined here and what's being returned from the DB.
 
-def user(username):
-    # display new comment
-    if request.method == "POST":
-        username = session["user"]
-        comment = request.form["comment"]
-        add_comment(username, comment)
-        return redirect(url_for("book", username=session["user"]))
 
-    return render_template("book.html", username=username,
-                           book_comments=comments)
+@app.route("/search", methods=["GET", "POST"])
+def search():
+    query = request.form.get("query")
+    books = list(mongo.db.books.find({"$text": {"$search": query}}))
+    #Performs a search in any text index for this collection using the query variable
+    return render_template("books.html", books=books)
 
 
 @app.route("/register", methods=["GET", "POST"])
