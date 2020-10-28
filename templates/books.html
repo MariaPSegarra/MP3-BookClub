@@ -1,9 +1,9 @@
 {% extends "base.html" %}
 {% block content %} 
 
-<div class="row">
-    <h3 class="center-align cyan-text text-darken-3">BOOKS 4readers</h3>
-</div>
+    <div class="row">
+        <h3 class="center-align cyan-text text-darken-3">BOOKS 4readers</h3>
+    </div>
 
 {% for book in books %}
   <div class="col s12 m7">
@@ -22,8 +22,8 @@
             <div class="card-action">
                 <p><b>Book suggested by:</b> <em>{{ book.added_by }}</em></p>
             {% if session.user|lower == book.added_by|lower %}     
-                 <p><a href="" class="btn-small teal">Done</a>
-                <a href="{{ url_for('edit_book', book_id=book._id) }}" class="btn-small orange darken-2">Edit</a></p>
+                <p><a href="{{ url_for('edit_book', book_id=book._id) }}" class="btn-small teal">Edit</a>
+                <a href="{{ url_for('delete_book', book_id=book._id) }}" class="btn-small orange darken-2">Delete</a></p>
             {% endif %}
             </div>
 

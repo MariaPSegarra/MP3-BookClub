@@ -26,11 +26,12 @@ mongo = PyMongo(app)
 
 
 @app.route("/")
-@app.route("/books", methods=["GET", "POST"])
-def books():
+@app.route("/get_books", methods=["GET", "POST"])
+def get_books():
     books = mongo.db.books.find()
     return render_template("books.html", books=books)
-
+    #1st books gets passed to genre.html 
+    #2nd books is the variable defined here and what's being returned from the DB.
 
 def user(username):
     # display new comment
@@ -117,9 +118,10 @@ def logout():
 
 @app.route("/contact", methods=["GET", "POST"])
 def contact():
+    if request.method == "POST":
     # displays flash message after the message has been sent.
     # it should return an empty template
-    flash("Your message has been sent")
+        flash("Your message has been sent")
     return render_template("contact.html")
 
 
@@ -137,7 +139,7 @@ def add_book():
 
         mongo.db.books.insert_one(book)
         flash("Your Book has been Added")
-        return redirect(url_for("books", "profile"))
+        return redirect(url_for("get_books"))
 
     genres = mongo.db.genres.find().sort("genre_name", 1)
     return render_template("add_book.html", genres=genres)
@@ -154,12 +156,60 @@ def edit_book(book_id):
             "book_image": request.form.get("book_image"),
             "added_by": session["user"]
         }
-        mongo.db.books.update({"_id": ObjectId(book_id)}, edition)
+        mongo.db.books.update(
+            {"_id": ObjectId(book_id)}, edition)
         flash("Your Book Information is Updated")
 
     book = mongo.db.books.find_one({"_id": ObjectId(book_id)})
     genres = mongo.db.genres.find().sort("genre_name", 1)
     return render_template("edit_book.html", book=book, genres=genres)
+
+
+@app.route("/delete_book/<book_id>")
+def delete_book(book_id):
+    mongo.db.books.remove({"_id": ObjectId(book_id)})
+    flash("Your Book is Deleted")
+    return redirect(url_for("get_books"))
+
+
+@app.route("/get_genres")
+def get_genres():
+    genres = list(mongo.db.genres.find().sort("genre_name", 1))
+    return render_template("genres.html", genres=genres)
+
+
+@app.route("/add_genre", methods=["GET", "POST"])
+def add_genre():
+    if request.method == "POST":
+        genre = {
+            "genre_name": request.form.get("genre_name")
+        }
+        mongo.db.genres.insert_one(genre)
+        flash("New Genre Added")
+        return redirect(url_for("get_genres"))
+
+    return render_template("add_genre.html")
+
+
+@app.route("/edit_genre/<genre_id>", methods=["GET", "POST"])
+def edit_genre(genre_id):
+    if request.method == "POST":
+        edition = {
+            "genre_name": request.form.get("genre_name")
+        }
+        mongo.db.genres.update({"_id": ObjectId(genre_id)}, edition)
+        flash("Genre is Updated")
+        return redirect(url_for("get_genres"))
+
+    genre = mongo.db.genres.find_one({"_id": ObjectId(genre_id)})
+    return render_template("edit_genre.html", genre=genre)
+
+
+@app.route("/delete_genre/<genre_id>")
+def delete_genre(genre_id):
+    mongo.db.genres.remove({"_id": ObjectId(genre_id)})
+    flash("Genre is Deleted")
+    return redirect(url_for("get_genres"))
 
 
 if __name__ == "__main__":

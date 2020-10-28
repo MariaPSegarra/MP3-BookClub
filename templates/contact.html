@@ -18,7 +18,7 @@
 </div>
 
     <div class="row">
-        <form class="col s12 m8 offset-m2" method="POST" onsubmit="return sendMail(this);">
+        <form class="col s12 m8 offset-m2" method="POST" action="{{ url_for('contact') }} onsubmit="return sendMail(this);">
             <div class="card-panel">
                 <!-- Name -->
                 <div class="row">

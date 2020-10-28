@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="row">
+    <h3 class="center-align cyan-text text-darken-3">ADD NEW GENRE</h3>
+</div>
+
+     <div class="row card-panel">
+        <form class="col s12" method="POST" action="{{ url_for('add_genre') }}">
+            <div class="row">
+                <div class="input-field col s12">
+                    <i class="fas fa-user-secret prefix cyan-text text-darken-3"></i>
+                    <input id="genre_name" name="genre_name" minlength="3"
+                        type="text"  class="validate" required></input>
+                    <label for="genre_name">New Genre</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col s12">
+                    <button type="submit" class="col s12 btn-large cyan darken-3 text-shadow">
+                        Add Genre <i class="fas fa-plus-square"></i>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+{% endblock %}
