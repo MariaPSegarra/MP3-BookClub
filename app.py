@@ -1,3 +1,5 @@
+import math
+import pymongo
 import os
 from flask import (
     Flask, flash, render_template,
@@ -25,6 +27,85 @@ app.secret_key = os.environ.get("SECRET_KEY")
 mongo = PyMongo(app)
 
 
+# Pagination and sorting params variables 
+PAGE_SIZE = 2
+KEY_PAGE_SIZE = 'page_size'
+KEY_PAGE_NUMBER = 'page_number'
+KEY_TOTAL = 'total'
+KEY_PAGE_COUNT = 'page_count'
+KEY_ENTITIES = 'items'
+KEY_NEXT = 'next_uri'
+KEY_PREV = 'prev_uri'
+KEY_SEARCH_TERM = 'search_term'
+KEY_ORDER_BY = 'order_by'
+KEY_ORDER = 'order'
+
+
+# Pagination macro provided by my mentor
+def get_paginated_items(entity, query={}, **params):  # function
+    page_size = int(params.get(KEY_PAGE_SIZE, PAGE_SIZE))
+    page_number = int(params.get(KEY_PAGE_NUMBER, 1))
+    order_by = params.get(KEY_ORDER_BY, '_id')
+    order = params.get(KEY_ORDER, 'asc')
+    order = pymongo.ASCENDING if order == 'asc' else pymongo.DESCENDING
+
+    # If statement to avoid any pagination issues
+    if page_number < 1:
+        page_number = 1
+    offset = (page_number - 1) * page_size
+    items = []
+
+    # Updated section allow user to paginate a filtered/sorted "query"
+    search_term = params.get(KEY_SEARCH_TERM, '')
+    if bool(query):
+        items = entity.find(query).sort(order_by, order).skip(
+            offset).limit(page_size)
+    else:
+        if search_term != '':
+            entity.create_index([("$**", 'text')])
+            result = entity.find({'$text': {'$search': search_term}})
+            items = result.sort(order_by, order).skip(offset).limit(page_size)
+        else:
+            items = entity.find().sort(
+                order_by, order
+            ).skip(offset).limit(page_size)
+
+    total_items = items.count()
+
+    if page_size > total_items:
+        page_size = total_items
+    if page_number < 1:
+        page_number = 1
+    if page_size:
+        page_count = math.ceil(total_items / page_size)
+    else:
+        page_count = 0
+    if page_number > page_count:
+        page_number = page_count
+    next_uri = {
+        KEY_PAGE_SIZE: page_size,
+        KEY_PAGE_NUMBER: page_number + 1
+    } if page_number < page_count else None
+    prev_uri = {
+        KEY_PAGE_SIZE: page_size,
+        KEY_PAGE_NUMBER: page_number - 1
+    } if page_number > 1 else None
+
+    return {
+        KEY_TOTAL: total_items,
+        KEY_PAGE_SIZE: page_size,
+        KEY_PAGE_COUNT: page_count,
+        KEY_PAGE_NUMBER: page_number,
+        KEY_NEXT: next_uri,
+        KEY_PREV: prev_uri,
+        KEY_SEARCH_TERM: search_term,
+        KEY_ORDER_BY: order_by,
+        KEY_ORDER: order,
+        KEY_ENTITIES: items
+    }
+
+
+# homepage
 @app.route("/")
 @app.route("/get_books", methods=["GET", "POST"])
 def get_books():
@@ -34,14 +115,17 @@ def get_books():
     #2nd books is the variable defined here and what's being returned from the DB.
 
 
+# search function
 @app.route("/search", methods=["GET", "POST"])
 def search():
     query = request.form.get("query")
     books = list(mongo.db.books.find({"$text": {"$search": query}}))
     #Performs a search in any text index using the query variable
+    flash("No results found for \"{}\"".format(query))
     return render_template("books.html", books=books)
 
 
+# user registration
 @app.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == "POST":
@@ -67,6 +151,7 @@ def register():
     return render_template("register.html")
 
 
+# user login
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
@@ -77,12 +162,12 @@ def login():
         if existing_user:
             # ensure hashed password matches user input
             if check_password_hash(
-                existing_user["password"], request.form.get("password")):
-                    session["user"] = request.form.get(
+                    existing_user["password"], request.form.get("password")):
+                session["user"] = request.form.get(
                         "username").lower()
-                    flash("Welcome, {}".format(
-                        request.form.get("username")))
-                    return redirect(url_for(
+                flash("Welcome, {}".format(
+                    request.form.get("username")))
+                return redirect(url_for(
                         "profile", username=session["user"]))
             else:
                 # invalid password match
@@ -97,22 +182,37 @@ def login():
     return render_template("login.html")
 
 
+# user profile page
 @app.route("/profile/<username>", methods=["GET", "POST"])
 def profile(username):
     # grab the session user's username from db
     username = mongo.db.users.find_one(
         {"username": session["user"]})["username"]
-    return render_template("profile.html", username=username)
+
+    user_mybooks_paginated = get_paginated_items(mongo.db.books, query={
+        "added_by": username}, **params)
+
+    if session["user"] == username:
+        return render_template(
+            "profile.html", username=username,
+            total_user_books=user_mybooks_paginated[KEY_TOTAL],
+            title="added_by",
+            user_mybooks_paginated=user_mybooks_paginated)
+
+    flash("You need to log in!")
+    return redirect(url_for("login"))
 
 
+#user logout
 @app.route("/logout")
 def logout():
     # remove user from session cookie
     flash("You have been logged out")
-    session.pop("user")
+    session.clear()
     return redirect(url_for("login"))
 
 
+#contact page
 @app.route("/contact", methods=["GET", "POST"])
 def contact():
     if request.method == "POST":
@@ -122,6 +222,7 @@ def contact():
     return render_template("contact.html")
 
 
+#Create function
 @app.route("/add_book", methods=["GET", "POST"])
 def add_book():
     if request.method == "POST":
@@ -142,6 +243,7 @@ def add_book():
     return render_template("add_book.html", genres=genres)
 
 
+#Update function
 @app.route("/edit_book/<book_id>", methods=["GET", "POST"])
 def edit_book(book_id):
     if request.method == "POST":
@@ -162,6 +264,7 @@ def edit_book(book_id):
     return render_template("edit_book.html", book=book, genres=genres)
 
 
+#Delete function
 @app.route("/delete_book/<book_id>")
 def delete_book(book_id):
     mongo.db.books.remove({"_id": ObjectId(book_id)})
