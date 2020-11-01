@@ -22,7 +22,7 @@ comments = []
 
 # homepage
 @app.route("/")
-@app.route("/get_books", methods=["GET", "POST"])
+@app.route("/get_books")
 def get_books():
     books = mongo.db.books.find()
     return render_template("books.html", books=books)
@@ -39,15 +39,17 @@ def add_comment():
             "comment_by": session["user"],
         }
         mongo.db.comments.insert_one(comment)
+        flash("Your comment has been posted")
         return redirect(url_for("add_comment"))
 
-    return render_template("books.html", comment=comments)
+    return render_template("books.html")
 
 
 # display comments
-@app.route("/get_comments", methods=["GET", "POST"])
+@app.route("/get_comments")
 def get_comments():
     comments = mongo.db.comments.find()
+
     return render_template("books.html", comments=comments)
 
 
