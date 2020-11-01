@@ -21,7 +21,8 @@ hr {
 .card.horizontal .card-image img {
     border-radius: 2px 0 0 2px;
     max-width: 400px;
-    width: auto;
+    min-width: 400px;
+    height: auto;
     padding: 10px;
 }
 

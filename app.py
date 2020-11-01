@@ -1,5 +1,3 @@
-import math
-import pymongo
 import os
 from flask import (
     Flask, flash, render_template,
@@ -12,12 +10,6 @@ if os.path.exists("env.py"):
 
 
 app = Flask(__name__)
-comments = []
-
-
-def add_comment(username, comment):
-    # add new comment
-    comments.append({"from": username, "comment": comment})
 
 
 app.config["MONGO_DBNAME"] = os.environ.get("MONGO_DBNAME")
@@ -25,84 +17,7 @@ app.config["MONGO_URI"] = os.environ.get("MONGO_URI")
 app.secret_key = os.environ.get("SECRET_KEY")
 
 mongo = PyMongo(app)
-
-
-# Pagination and sorting params variables 
-PAGE_SIZE = 2
-KEY_PAGE_SIZE = 'page_size'
-KEY_PAGE_NUMBER = 'page_number'
-KEY_TOTAL = 'total'
-KEY_PAGE_COUNT = 'page_count'
-KEY_ENTITIES = 'items'
-KEY_NEXT = 'next_uri'
-KEY_PREV = 'prev_uri'
-KEY_SEARCH_TERM = 'search_term'
-KEY_ORDER_BY = 'order_by'
-KEY_ORDER = 'order'
-
-
-# Pagination macro provided by my mentor
-def get_paginated_items(entity, query={}, **params):  # function
-    page_size = int(params.get(KEY_PAGE_SIZE, PAGE_SIZE))
-    page_number = int(params.get(KEY_PAGE_NUMBER, 1))
-    order_by = params.get(KEY_ORDER_BY, '_id')
-    order = params.get(KEY_ORDER, 'asc')
-    order = pymongo.ASCENDING if order == 'asc' else pymongo.DESCENDING
-
-    # If statement to avoid any pagination issues
-    if page_number < 1:
-        page_number = 1
-    offset = (page_number - 1) * page_size
-    items = []
-
-    # Updated section allow user to paginate a filtered/sorted "query"
-    search_term = params.get(KEY_SEARCH_TERM, '')
-    if bool(query):
-        items = entity.find(query).sort(order_by, order).skip(
-            offset).limit(page_size)
-    else:
-        if search_term != '':
-            entity.create_index([("$**", 'text')])
-            result = entity.find({'$text': {'$search': search_term}})
-            items = result.sort(order_by, order).skip(offset).limit(page_size)
-        else:
-            items = entity.find().sort(
-                order_by, order
-            ).skip(offset).limit(page_size)
-
-    total_items = items.count()
-
-    if page_size > total_items:
-        page_size = total_items
-    if page_number < 1:
-        page_number = 1
-    if page_size:
-        page_count = math.ceil(total_items / page_size)
-    else:
-        page_count = 0
-    if page_number > page_count:
-        page_number = page_count
-    next_uri = {
-        KEY_PAGE_SIZE: page_size,
-        KEY_PAGE_NUMBER: page_number + 1
-    } if page_number < page_count else None
-    prev_uri = {
-        KEY_PAGE_SIZE: page_size,
-        KEY_PAGE_NUMBER: page_number - 1
-    } if page_number > 1 else None
-
-    return {
-        KEY_TOTAL: total_items,
-        KEY_PAGE_SIZE: page_size,
-        KEY_PAGE_COUNT: page_count,
-        KEY_PAGE_NUMBER: page_number,
-        KEY_NEXT: next_uri,
-        KEY_PREV: prev_uri,
-        KEY_SEARCH_TERM: search_term,
-        KEY_ORDER_BY: order_by,
-        KEY_ORDER: order,
-        KEY_ENTITIES: items
-    }
+comments = []
 
 
 # homepage
@@ -113,6 +28,27 @@ def get_books():
     return render_template("books.html", books=books)
     #1st books gets passed to genre.html 
     #2nd books is the variable defined here and what's being returned from the DB.
+
+
+# add new comment
+@app.route("/add_comment", methods=["GET", "POST"])
+def add_comment():
+    if request.method == "POST":
+        comment = {
+            "comment": request.form.get("comment").lower(),
+            "comment_by": session["user"],
+        }
+        mongo.db.comments.insert_one(comment)
+        return redirect(url_for("add_comment"))
+
+    return render_template("books.html", comment=comments)
+
+
+# display comments
+@app.route("/get_comments", methods=["GET", "POST"])
+def get_comments():
+    comments = mongo.db.comments.find()
+    return render_template("books.html", comments=comments)
 
 
 # search function
@@ -188,19 +124,7 @@ def profile(username):
     # grab the session user's username from db
     username = mongo.db.users.find_one(
         {"username": session["user"]})["username"]
-
-    user_mybooks_paginated = get_paginated_items(mongo.db.books, query={
-        "added_by": username}, **params)
-
-    if session["user"] == username:
-        return render_template(
-            "profile.html", username=username,
-            total_user_books=user_mybooks_paginated[KEY_TOTAL],
-            title="added_by",
-            user_mybooks_paginated=user_mybooks_paginated)
-
-    flash("You need to log in!")
-    return redirect(url_for("login"))
+    return render_template("profile.html", username=username)
 
 
 #user logout
@@ -219,10 +143,10 @@ def contact():
     # displays flash message after the message has been sent.
     # it should return an empty template
         flash("Your message has been sent")
-    return render_template("contact.html")
+        return render_template("contact.html")
 
 
-#Create function
+#Add content function
 @app.route("/add_book", methods=["GET", "POST"])
 def add_book():
     if request.method == "POST":

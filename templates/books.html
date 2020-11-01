@@ -1,5 +1,4 @@
 {% extends "base.html" %}
-{% import "components.html" as components %}
 {% block content %} 
 
     <div class="row">
@@ -50,31 +49,44 @@
 
             </div>
         </div>
-        <div class="card-panel col s12 m8 offset-m2">
-            <div class="row ">
+
+    <hr class="cyan-text text-darken-3">    
+        {% endfor %} 
+    
+     {% if session.user %}
+        <div class="row">
+            <form class="col s12 m8 offset-m2" method="POST" action="{{ url_for('add_comment') }}"> 
                 <div class="input-field col s12">
                     <i class="fas fa-comment-alt prefix cyan-text text-darken-3"></i>
                     <textarea id="comment" name="comment" class="materialize-textarea validate"></textarea>
                     <label for="comment">Comment</label>
-                </div>
-            </div>
-            <div class="row">
-                <button type="submit" name="send-comment" id="send-comment" class="col s12 btn-large cyan darken-3 text-shadow">
-                    Post comment <i class="fas fa-sign-in-alt"></i>
-                </button>
-            </div>
-        </div>
-    </div>
-        {% for comment in book_comments %}
-            <p>{{ comment.from }}: {{ comment.comment }}</p>
-        {% endfor %}
+                 </div>
+             
+                <div class="row">
+                    <button type="submit" name="send-comment" id="send-comment" class="col s12 btn-large cyan darken-3 text-shadow">
+                        Post comment <i class="fas fa-sign-in-alt"></i>
+                    </button>
+                 </div>
+            </form>
+         </div>
 
-    <hr class="cyan-text text-darken-3">    
-        {% endfor %} 
- 
-     <!--Pagination-->
-    <div class="container center">
-         {{ components.pagination(url_for('get_books'), books) }}
-    </div>
+        <div class="row">
+            <ul class="collapsible">
+            {% for comment in comments %}
+            <li>
+                <div class="collapsible-header white-text cyan darken-3 text-shadow">
+                    <i class="fas fa-caret-down"></i>
+                <p> <strong>Comments</strong> :</p>
+        
+                </div>
+                <div class="collapsible-body">
+                <p><em>From {{ comment_by }}</em>: {{ comment }}</p>
+                </div>
+            </li>
+            {% endfor %}
+        </ul>	
+        </div>
+
+    {% endif %}
 
 {% endblock %}
