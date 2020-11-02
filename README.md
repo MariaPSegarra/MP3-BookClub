@@ -106,6 +106,7 @@ and the html and jinja seem correct, I wasn't able to display the comments on th
 I've used Gitpod for the development stage.
 The app is deployed on [Heroku](https://book-readers-mp3.herokuapp.com/) following instructions from the new Data Centric Module videos.
 
+## Credits
 
-
+All [content] and [images] come from wikipedia pages.
 
