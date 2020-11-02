@@ -25,6 +25,7 @@ Development environment
 - Javascript
 - Jquery
 - Python
+- Flask
 - Jinja
 - [Emailjs API](https://www.emailjs.com/)
 For the contact form
