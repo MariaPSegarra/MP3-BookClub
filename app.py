@@ -49,7 +49,6 @@ def add_comment():
 @app.route("/get_comments")
 def get_comments():
     comments = mongo.db.comments.find()
-
     return render_template("books.html", comments=comments)
 
 
